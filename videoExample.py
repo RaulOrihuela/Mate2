@@ -1,24 +1,22 @@
 import numpy as np
 import cv2
 
+debug = False
 cannyMin = 125   
 cannyMax = 150
-
-minLineLength = 10
-maxLineGap = 10
-
+borderCount = 220
 cap = cv2.VideoCapture(0)
 
 while(True):
 
-    #FEEDBACK LOOP
-    #if ruido:
-        #cannyMin += 25   
-        #cannyMax += 25
-    #if pocosBordes:
-        #if cannyMin >= 25 and cannyMax >= 50:
-            #cannyMin -= 25   
-            #cannyMax -= 25
+    #MODIFY PARAMS BASED ON FEEDBACK
+    if borderCount > 320:
+        cannyMin += 25   
+        cannyMax += 25
+    if borderCount < 180:
+        if cannyMin >= 25 and cannyMax >= 50:
+            cannyMin -= 25   
+            cannyMax -= 25
 
     # Capture frame-by-frame
     ret, frame = cap.read()
@@ -36,6 +34,11 @@ while(True):
     contours0, hierarchy=cv2.findContours(vals, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     contours = [cv2.approxPolyDP(cnt, 3, True) for cnt in contours0]
 
+    #GIVE FEEDBACK
+    borderCount = len(contours0)
+    if debug:
+        print (borderCount, cannyMin , cannyMax)
+
     #DRAWING CONTOURS
     _black = (0, 0, 0)
     levels=2 #1 contours drawn, 2 internal contours as well, 3 ...
@@ -48,14 +51,6 @@ while(True):
     key = cv2.waitKey(1) & 0xFF
     if key == ord('q') or key == ord('Q'):
         break
-    #MANUAL POR EL MOMENTO, DEBE DE SER EN FEEDBACK LOOP
-    elif key == ord('d') or key == ord('D'):
-        cannyMin += 25   
-        cannyMax += 25
-    elif key == ord('a') or key == ord('A'):
-        if cannyMin >= 50 and cannyMax >= 75:
-            cannyMin -= 25   
-            cannyMax -= 25
 
 # When everything done, release the capture
 cap.release()

@@ -20,16 +20,16 @@ while(True):
 
     ret, frame = cap.read()
     grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    grayFrame = cv2.medianBlur(grayFrame,5)
+    #grayFrame = cv2.medianBlur(grayFrame,5)
     grayFrame = cv2.adaptiveThreshold(grayFrame,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
             cv2.THRESH_BINARY,11,2)
 
     grayFrame = cv2.medianBlur(grayFrame,5)
 
     #EDGE DETECTION
-    grayFrame = cv2.Canny(grayFrame,cannyMin,cannyMax,apertureSize = 3)
+    #grayFrame = cv2.Canny(grayFrame,cannyMin,cannyMax,apertureSize = 3)
     #EDGE REDUCTION
-    grayFrame = cv2.dilate(grayFrame,None)
+    #grayFrame = cv2.dilate(grayFrame,None)
 
     #grayFrame = cv2.GaussianBlur(grayFrame,(5,5),0)
     cv2.imshow('video gray', grayFrame)
@@ -38,6 +38,8 @@ while(True):
     key = cv2.waitKey(1) & 0xFF
     if key == ord('q') or key == ord('Q'):
         break
+
+
 
 
 
